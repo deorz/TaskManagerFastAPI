@@ -12,4 +12,4 @@ RUN pip3 install -U pip && pip3 install -r requirements.txt
 
 ENV PYTHONPATH "${PYTHONPATH}:/"
 
-CMD ["gunicorn", "main:task_manager", "--workers", "2", "--worker-class", "uvicorn.workers.UvicornWorker", "--bind", "0:8000"]
+CMD ["gunicorn", "main:task_manager", "--workers", "1", "--worker-class", "uvicorn.workers.UvicornWorker", "--bind", "0:8000"]
