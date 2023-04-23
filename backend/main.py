@@ -1,14 +1,22 @@
 from typing import Callable
 
 from fastapi import FastAPI, Response, Request
+from fastapi.exceptions import RequestValidationError
 from sqlalchemy.exc import SQLAlchemyError
 from starlette import status
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import JSONResponse
 
-from backend.task_manager.database.base import create_session
+from backend.task_manager.auth.views import auth_router
+from backend.task_manager.database.base import create_session, engine
 from backend.task_manager.database.service import try_flush_commit
+from backend.task_manager.order.views import order_router
+from backend.task_manager.system.views import system_router
+from backend.task_manager.tasks.views import tasks_router
+from backend.task_manager.users.views import users_router
+from backend.task_manager.utils.file_manage import delete_wrong_files
+from backend.task_manager.utils.tasks_loop import run_tasks_loop
 
 task_manager = FastAPI(
     title='TaskManagerFastAPI',
@@ -53,3 +61,35 @@ task_manager.add_middleware(
     middleware_class=BaseHTTPMiddleware,
     dispatch=session_maker
 )
+
+
+@task_manager.exception_handler(RequestValidationError)
+async def validation_exception_handler(
+        request: Request, exc: RequestValidationError
+):
+    return JSONResponse(
+        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        content={
+            "detail": exc.errors(),
+            "body": exc.body
+        },
+    )
+
+
+@task_manager.on_event("startup")
+async def startup():
+    import asyncio
+    asyncio.create_task(run_tasks_loop())
+    asyncio.create_task(delete_wrong_files())
+
+
+@task_manager.on_event("shutdown")
+async def shutdown():
+    await engine.dispose()
+
+
+task_manager.include_router(router=users_router, prefix='/v1')
+task_manager.include_router(router=tasks_router, prefix='/v1')
+task_manager.include_router(router=order_router, prefix='/v1')
+task_manager.include_router(router=system_router, prefix='/v1')
+task_manager.include_router(router=auth_router, prefix='/v1')
