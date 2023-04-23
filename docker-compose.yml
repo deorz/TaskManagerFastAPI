@@ -1,0 +1,46 @@
+version: '1.0'
+services:
+  db:
+    image: postgres:14.0-alpine
+    volumes:
+      - ./task_manager.sql:/docker-entrypoint-initdb.d/init_task_manager.sql
+    env_file:
+      - ./.env
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${DB_NAME}'"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+
+  backend:
+    image: task_manager_backend
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - ./.env
+
+  frontend:
+    image: task_manager_front
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    depends_on:
+      - backend
+    volumes:
+      - ../frontend/:/frontend/result_build/
+
+  nginx:
+    image: nginx:1.19.3
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ../frontend/build:/usr/share/nginx/html/
+    depends_on:
+      - frontend
+      - backend
