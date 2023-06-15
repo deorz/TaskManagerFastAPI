@@ -11,12 +11,10 @@ from backend.task_manager.database.models import Task, Order, System, User, File
 from backend.task_manager.database.queries import get_entity, update_entity
 from backend.task_manager.database.service import try_flush_commit
 from backend.task_manager.status.enums import StatusEnum
-from backend.task_manager.tasks.schema import TaskOut, TaskIn, TaskBase, TaskResult, \
-    TaskOutShort
+from backend.task_manager.tasks.schema import (TaskOut, TaskIn, TaskBase, TaskResult, TaskOutShort)
 from backend.task_manager.utils.authentication import JWTBearer, get_current_user
 from backend.task_manager.utils.file_manage import create_file_from_data
 from backend.task_manager.utils.order import reorder_queue
-from backend.task_manager.utils.process_manage import run_process
 
 tasks_router = APIRouter(prefix='/tasks')
 
@@ -68,7 +66,8 @@ async def create_task(
     """Функция для создания записи о таске"""
     file: File = await create_file_from_data(
         session=request.state.session,
-        data=task.file
+        data=task.file,
+        type=task.type
     )
     # Создание главной записи
     record: Task = Task(
@@ -186,7 +185,6 @@ async def task_result(request: Request, task_result: TaskResult, pk: int):
     )
     order: Order = result.scalars().first()
 
-    order.task.process_id = task_result.process_id
     order.task.output = task_result.output
     order.task.errors = task_result.errors
     order.task.exitcode = task_result.exitcode

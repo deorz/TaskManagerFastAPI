@@ -53,6 +53,7 @@ class File(Base):
     id_file = Column(UUID, primary_key=True, comment='UUID Файла')
     file_path = Column(String, nullable=False, comment='Расположение файла')
     readable_file_name = Column(String, nullable=False, comment='Человеко-читаемое имя файла')
+    type = Column(Integer, comment='Тип Файла')
 
 
 class Task(Base):

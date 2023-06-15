@@ -1,5 +1,6 @@
 import asyncio
 import base64
+from enum import IntEnum
 from uuid import uuid4
 
 from sqlalchemy import select, func, ARRAY, String
@@ -12,20 +13,34 @@ from backend.task_manager.settings import settings
 from backend.task_manager.tasks.schema import FileIn
 
 
-async def create_file_from_data(session: AsyncSession, data: FileIn):
+class FileType(IntEnum):
+    python = 1
+    mpi_cpp = 2
+
+
+async def create_file_from_data(session: AsyncSession, data: FileIn, type: int):
     id_file = str(uuid4())
     file_dir = settings.BASE_DIR / settings.FILE_PATH
     file_dir.mkdir(exist_ok=True)
-    file_path = file_dir / f'{id_file}.py'
+
+    extension = '.py' if type == FileType.python.value else ''
+
+    file_path = file_dir / f'{id_file}{extension}'
+
     record = File(
         id_file=id_file,
         file_path=str(file_path),
-        readable_file_name=data.name
+        readable_file_name=data.name,
+        type=type
     )
+
     file_content = data.body.split(',')[-1]
 
     with open(file_path, 'wb') as file:
         file.write(base64.b64decode(file_content))
+
+    if type == FileType.mpi_cpp:
+        file_path.chmod(mode=0o744)
 
     session.add(record)
     await try_flush_commit(session=session, commit=False)

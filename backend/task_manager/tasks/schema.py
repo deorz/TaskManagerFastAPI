@@ -57,13 +57,13 @@ class FileIn(BaseModel):
 class TaskIn(TaskBase):
     file: FileIn
     params: Union[str, None] = None
+    type: int
     num_threads: int
     priority: int
     created_at: datetime = datetime.now().replace(microsecond=0)
 
 
 class TaskResult(BaseModel):
-    process_id: int
     output: str
     errors: str
     exitcode: int

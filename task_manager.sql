@@ -274,7 +274,8 @@ ALTER TABLE tasks.create_id_task OWNER TO postgres;
 CREATE TABLE tasks.files (
     id_file uuid NOT NULL,
     file_path character varying NOT NULL,
-    readable_file_name character varying NOT NULL
+    readable_file_name character varying NOT NULL,
+    type integer
 );
 
 
@@ -306,6 +307,9 @@ COMMENT ON COLUMN tasks.files.file_path IS 'Расположение файла'
 --
 
 COMMENT ON COLUMN tasks.files.readable_file_name IS 'Человеко-читаемое имя файла';
+
+
+COMMENT ON COLUMN tasks.files.type IS 'Тип файла';
 
 
 --
