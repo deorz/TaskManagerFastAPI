@@ -22,6 +22,7 @@ task_manager = FastAPI(
     title='TaskManagerFastAPI',
     description='Task Manager for Supercomputer',
     version='0.1',
+    debug=True
 )
 
 task_manager.add_middleware(

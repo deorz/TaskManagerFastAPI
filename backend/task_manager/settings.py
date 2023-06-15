@@ -4,7 +4,6 @@ from pathlib import Path, PosixPath
 from dotenv import load_dotenv
 from pydantic import BaseSettings
 
-
 load_dotenv(Path(__file__).resolve().parent.parent / '.env')
 
 
@@ -19,7 +18,9 @@ class Settings(BaseSettings):
     EXPIRE: int = int(getenv('EXPIRE', 86400))
     BASE_DIR: PosixPath = Path(__file__).resolve().parent
     FILE_PATH: str = getenv('FILE_PATH')
-    DEBUG: bool = False
+    SSH_PASSPHRASE = getenv('SSH_PASSPHRASE')
+    SSH_USER = getenv('SSH_USER')
+    DEBUG: bool = True
 
 
 settings = Settings()

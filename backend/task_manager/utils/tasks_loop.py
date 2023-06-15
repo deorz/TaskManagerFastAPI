@@ -57,16 +57,8 @@ async def run_tasks_loop():
 
                 await try_flush_commit(session=session, commit=False)
 
-                args = [
-                    arg for arg in (
-                        '/usr/bin/python3',
-                        task.file.file_path,
-                        task.params
-                    ) if arg
-                ]
-
-                run_process(arglist=args, id_task=task.id_task)
+                run_process(task=task, file=task.file, system=system_to_run, id_task=task.id_task)
                 await try_flush_commit(session=session, commit=True)
 
         await session.close()
-        await asyncio.sleep(60)
+        await asyncio.sleep(20)
