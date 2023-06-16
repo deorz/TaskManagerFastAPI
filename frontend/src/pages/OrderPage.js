@@ -26,7 +26,7 @@ function OrderContent() {
     const dataFetchedRef = useRef(false);
 
     const getOrder = async () => {
-        const token = localStorage.getItem('token')
+        const token = sessionStorage.getItem('token')
         if (token) {
             try {
                 const response = await Requests.getOrder();

@@ -53,8 +53,6 @@ function SystemsPageContent() {
 
     const deleteSystem = async (systemId) => {
         const response = await Requests.deleteSystem({ systemId: systemId });
-        const data = await response.json();
-        alert(data.detail);
         await getSystems();
     }
 
@@ -68,7 +66,7 @@ function SystemsPageContent() {
                     color="text.primary"
                     gutterBottom
                 >
-                    Виртуальные машины
+                    Вычислительные узлы
                 </Typography>
             </Container>
             <Container disableGutters maxWidth="lg" component="main" sx={{ pt: 4, pb: 4 }}>

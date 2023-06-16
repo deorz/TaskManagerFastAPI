@@ -20,10 +20,10 @@ export default function LoginPage () {
         const response = await Requests.signIn({email: email, password: password})
         const result = await response.json()
         if (result.access_token) {
-            localStorage.setItem('token', result.access_token)
+            sessionStorage.setItem('token', result.access_token)
             const userResponse = await Requests.getUser();
             const userData = await userResponse.json();
-            localStorage.setItem('user', JSON.stringify(userData));
+            sessionStorage.setItem('user', JSON.stringify(userData));
             navigate('/', {replace: true})
         }
     }

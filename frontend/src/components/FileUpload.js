@@ -1,3 +1,5 @@
+import React from "react";
+
 import Button from "@mui/material/Button";
 import { Divider, Stack } from "@mui/material";
 import Typography from "@mui/material/Typography";
@@ -27,7 +29,7 @@ function FileUpload(props) {
                 multiple
                 type="file"
                 onChange={handleFileChange}
-                accept=".py"
+                // accept=".py"
             />
             <label htmlFor="file">
                 <Stack direction="row" spacing={2} divider={<Divider orientation="vertical" flexItem />}>

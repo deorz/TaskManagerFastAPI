@@ -13,8 +13,8 @@ import {Divider, IconButton} from "@mui/material";
 export default function CustomAppBar(props) {
     const location = useLocation();
     const navigate = useNavigate();
-    const token = localStorage.getItem('token')
-    const user = JSON.parse(localStorage.getItem('user'));
+    const token = sessionStorage.getItem('token')
+    const user = JSON.parse(sessionStorage.getItem('user'));
 
     return (
         <AppBar
@@ -26,7 +26,7 @@ export default function CustomAppBar(props) {
             <Toolbar sx={{flexWrap: 'wrap'}}>
                 <ComputerOutlined sx={{mx: 1}}/>
                 <Typography variant="h6" color="inherit" noWrap sx={{flexGrow: 1}}>
-                    ИС «Диспетчер суперкомпьютера»
+                    Диспетчер суперкомпьютера
                 </Typography>
                 <nav>
                     <Button
@@ -81,7 +81,7 @@ export default function CustomAppBar(props) {
                         </Typography>
                         <Button
                             onClick={e => {
-                                localStorage.removeItem('token');
+                                sessionStorage.removeItem('token');
                                 navigate('/', {replace: true})
                             }}
                             variant="contained"

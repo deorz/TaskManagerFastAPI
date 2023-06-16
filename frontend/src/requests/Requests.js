@@ -31,7 +31,7 @@ class Requests {
     }
 
     getUser () {
-        const token = localStorage.getItem('token')
+        const token = sessionStorage.getItem('token')
         const authorization = token ? { 'Authorization': `Bearer ${token}` } : {}
 
         return fetch(
@@ -55,7 +55,7 @@ class Requests {
         password=null, 
         new_password=null 
     }) {
-        const token = localStorage.getItem('token')
+        const token = sessionStorage.getItem('token')
         const authorization = token ? { 'Authorization': `Bearer ${token}` } : {}
         
         let data = {};
@@ -84,7 +84,7 @@ class Requests {
     }
 
     getTasks () {
-        const token = localStorage.getItem('token')
+        const token = sessionStorage.getItem('token')
         const authorization = token ? { 'Authorization': `Bearer ${token}` } : {}
 
         return fetch(
@@ -101,7 +101,7 @@ class Requests {
     }
 
     getTask ({ task_id }) {
-        const token = localStorage.getItem('token')
+        const token = sessionStorage.getItem('token')
         const authorization = token ? { 'Authorization': `Bearer ${token}` } : {}
 
         return fetch(
@@ -117,8 +117,8 @@ class Requests {
         )
     }
 
-    createTask ({ file, params, num_threads, priority }) {
-        const token = localStorage.getItem('token')
+    createTask ({ file, params, num_threads, priority, type }) {
+        const token = sessionStorage.getItem('token')
         const authorization = token ? { 'Authorization': `Bearer ${token}` } : {}
 
         return fetch(
@@ -134,14 +134,15 @@ class Requests {
                     file,
                     params,
                     num_threads,
-                    priority
+                    priority,
+                    type
                 })
             }
         )
     }
 
     deleteTask ({ task_id }) {
-        const token = localStorage.getItem('token')
+        const token = sessionStorage.getItem('token')
         const authorization = token ? { 'Authorization': `Bearer ${token}` } : {}
 
         return fetch(
@@ -158,7 +159,7 @@ class Requests {
     }
 
     executeTask ({ task_id }) {
-        const token = localStorage.getItem('token')
+        const token = sessionStorage.getItem('token')
         const authorization = token ? { 'Authorization': `Bearer ${token}` } : {}
 
         return fetch(
@@ -175,7 +176,7 @@ class Requests {
     }
 
     getOrder () {
-        const token = localStorage.getItem('token')
+        const token = sessionStorage.getItem('token')
         const authorization = token ? { 'Authorization': `Bearer ${token}` } : {}
 
         return fetch(
@@ -192,7 +193,7 @@ class Requests {
     }
 
     getSystems () {
-        const token = localStorage.getItem('token')
+        const token = sessionStorage.getItem('token')
         const authorization = token ? { 'Authorization': `Bearer ${token}` } : {}
 
         return fetch(
@@ -209,7 +210,7 @@ class Requests {
     }
 
     createSystem ({ host, threads }) {
-        const token = localStorage.getItem('token')
+        const token = sessionStorage.getItem('token')
         const authorization = token ? { 'Authorization': `Bearer ${token}` } : {}
 
         return fetch(
@@ -230,7 +231,7 @@ class Requests {
     }
 
     deleteSystem ({ systemId }) {
-        const token = localStorage.getItem('token')
+        const token = sessionStorage.getItem('token')
         const authorization = token ? { 'Authorization': `Bearer ${token}` } : {}
 
         return fetch(
@@ -247,7 +248,7 @@ class Requests {
     }
 
     changeSystemState ({ systemId }) {
-        const token = localStorage.getItem('token')
+        const token = sessionStorage.getItem('token')
         const authorization = token ? { 'Authorization': `Bearer ${token}` } : {}
 
         return fetch(
@@ -264,7 +265,7 @@ class Requests {
     }
 
     updateSystem ({ systemId, host, threads }) {
-        const token = localStorage.getItem('token')
+        const token = sessionStorage.getItem('token')
         const authorization = token ? { 'Authorization': `Bearer ${token}` } : {}
 
         return fetch(
@@ -286,5 +287,5 @@ class Requests {
 
 }
 
-Requests = new Requests('http://localhost', { 'content-type': 'application/json' });
+Requests = new Requests('http://localhost:8000', { 'content-type': 'application/json' });
 export default Requests;

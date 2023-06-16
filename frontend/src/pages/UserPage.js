@@ -18,7 +18,7 @@ export default function UserPage() {
 
 function UserForm() {
     const navigate = useNavigate();
-    const user = JSON.parse(localStorage.getItem('user'));
+    const user = JSON.parse(sessionStorage.getItem('user'));
     const [passwordRequired, setRequired] = useState(false);
     
     const handleSubmit = async (event) => {
@@ -34,7 +34,7 @@ function UserForm() {
         })
         const userData = await response.json();
         if (response.status < 400) {
-            localStorage.setItem('user', JSON.stringify(userData));
+            sessionStorage.setItem('user', JSON.stringify(userData));
             navigate('/', {replace: true})
         }
         else {
