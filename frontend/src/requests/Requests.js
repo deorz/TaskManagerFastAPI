@@ -287,5 +287,5 @@ class Requests {
 
 }
 
-Requests = new Requests('http://localhost:8000', { 'content-type': 'application/json' });
+Requests = new Requests('http://localhost', { 'content-type': 'application/json' });
 export default Requests;
