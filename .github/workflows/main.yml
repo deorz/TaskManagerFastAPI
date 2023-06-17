@@ -1,8 +1,10 @@
 
 name: TaskManager Workflow
 
-jobs:
+on:
   workflow_dispatch:
+
+jobs:
 
   build_and_push_backend_to_docker_hub:
     name: push Docker image with backend to Docker Hub
