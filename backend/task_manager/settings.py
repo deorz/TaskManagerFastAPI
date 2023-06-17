@@ -1,3 +1,4 @@
+import os
 from os import getenv
 from pathlib import Path, PosixPath
 
@@ -18,9 +19,9 @@ class Settings(BaseSettings):
     EXPIRE: int = int(getenv('EXPIRE', 86400))
     BASE_DIR: PosixPath = Path(__file__).resolve().parent
     FILE_PATH: str = getenv('FILE_PATH')
-    SSH_PASSPHRASE = getenv('SSH_PASSPHRASE')
-    SSH_USER = getenv('SSH_USER')
-    DEBUG: bool = True
+    SSH_PASSPHRASE: str = getenv('SSH_PASSPHRASE')
+    SSH_USER: str = getenv('SSH_USER', 'root')
+    DEBUG: bool = os.getenv('DEBUG', False)
 
 
 settings = Settings()
