@@ -13,7 +13,7 @@ services:
       retries: 3
 
   backend:
-    image: task_manager_backend
+    image: deorz/task_manager_backend
     build:
       context: backend
       dockerfile: Dockerfile
@@ -25,7 +25,7 @@ services:
       - ./.env
 
   frontend:
-    image: task_manager_front
+    image: deorz/task_manager_front
     build:
       context: frontend
       dockerfile: Dockerfile
