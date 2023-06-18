@@ -7,7 +7,7 @@ from backend.task_manager.settings import settings
 
 DATABASE_URL: str = (
     'postgresql+asyncpg://{USER}:{PASSWORD}@{HOST}:{PORT}/{DB_NAME}'.format(
-        USER=settings.USER,
+        USER=settings.POSTGRES_USER,
         PASSWORD=settings.PASSWORD,
         HOST=settings.HOST,
         PORT=settings.PORT,
@@ -15,7 +15,7 @@ DATABASE_URL: str = (
     )
 )
 
-engine: AsyncEngine = create_async_engine(DATABASE_URL, echo=settings.DEBUG)
+engine: AsyncEngine = create_async_engine(DATABASE_URL, echo=settings.DEBUG_)
 
 
 def create_session() -> AsyncSession:

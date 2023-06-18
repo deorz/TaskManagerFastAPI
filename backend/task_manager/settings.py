@@ -1,4 +1,3 @@
-import os
 from os import getenv
 from pathlib import Path, PosixPath
 
@@ -9,7 +8,7 @@ load_dotenv(Path(__file__).resolve().parent.parent / '.env')
 
 
 class Settings(BaseSettings):
-    USER: str = getenv('POSTGRES_USER', 'postgres')
+    POSTGRES_USER: str = getenv('POSTGRES_USER', 'postgres')
     PASSWORD: str = getenv('POSTGRES_PASSWORD', 'postgres')
     HOST: str = getenv('DB_HOST', '127.0.0.1')
     PORT: str = getenv('DB_PORT', '5432')
@@ -21,7 +20,7 @@ class Settings(BaseSettings):
     FILE_PATH: str = getenv('FILE_PATH')
     SSH_PASSPHRASE: str = getenv('SSH_PASSPHRASE')
     SSH_USER: str = getenv('SSH_USER', 'root')
-    DEBUG: bool = os.getenv('DEBUG', False)
+    DEBUG_: bool = getenv('DEBUG', False)
 
 
 settings = Settings()

@@ -10,7 +10,7 @@ from backend.task_manager.utils.ssh_client import RemoteClient
 
 def on_terminate(output: bytes, errors: bytes, exitcode: int, id_task: int) -> None:
     """Функция обработки результата выполнения таски"""
-    port: str = ':8000' if settings.DEBUG else ''
+    port: str = ':8000' if settings.DEBUG_ else ''
     requests.post(
         url=f'http://127.0.0.1{port}/v1/tasks/{id_task}/result',
         json={
@@ -38,7 +38,7 @@ def run_process(task: Task, file: File, system: System, id_task: int) -> None:
         if file.type == FileType.python.value:
             execute_command = '/usr/bin/python3'
             num_threads = ''
-            path_to_file = 'tasks/{Path(file.file_path).name}'
+            path_to_file = f'tasks/{Path(file.file_path).name}'
             execute_params = task.params if task.params else ''
 
         else:

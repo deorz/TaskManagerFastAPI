@@ -1,6 +1,4 @@
-from os import system
-
-from paramiko import AutoAddPolicy, SSHClient, AuthenticationException, SSHException
+from paramiko import AutoAddPolicy, SSHClient, AuthenticationException
 from scp import SCPClient
 
 
@@ -25,7 +23,7 @@ class RemoteClient:
             client.connect(
                 self.host,
                 username=self.user,
-                passphrase=self.passphrase,
+                password=self.passphrase,
                 timeout=5000,
             )
             return client
