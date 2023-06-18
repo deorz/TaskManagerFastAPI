@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, { useEffect, useReducer, useRef, useState } from "react";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
@@ -9,7 +9,7 @@ import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
 import TableContainer from "@mui/material/TableContainer";
 import Requests from "../requests/Requests";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
     Divider,
     FormHelperText,
@@ -21,15 +21,27 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import SearchIcon from '@mui/icons-material/Search';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import FileUpload from "../components/FileUpload";
-import {Close} from "@mui/icons-material";
+import { Close } from "@mui/icons-material";
 
 function CreateTaskForm(props) {
     const handleSubmit = props.hanleSubmit;
+    const [numThreadsRequired, setRequired] = useState(true);
+
+    const handleChange = (event) => {
+        let value = event.target.value;
+        if (value !== 1) {
+            setRequired(false)
+        } else {
+            setRequired(true)
+        }
+    }
+
     return (
         <React.Fragment>
             <Box sx={{
@@ -44,13 +56,38 @@ function CreateTaskForm(props) {
                 <Typography component="h1" variant="h5">
                     Создать задачу
                 </Typography>
-                <Box component="form" onSubmit={handleSubmit} noValidate sx={{mt: 3}}>
+                <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 3 }}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
-                            <Typography align="center" variant="subtitle1" sx={{pb: 2}}>
-                                Исполняемый Python Файл
+                            <Typography align="center" variant="subtitle1" sx={{ pb: 2 }}>
+                                Исполняемый файл
                             </Typography>
-                            <FileUpload file={props.file} setFile={props.setFile}/>
+                            <FileUpload file={props.file} setFile={props.setFile} />
+                            <FormHelperText>
+                                Обратите внимание, что на данный момент поддерживаются только исполняемые файлы Python, а так же исполняемые файлы MPI
+                            </FormHelperText>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                select
+                                required
+                                fullWidth
+                                defaultValue={1}
+                                id="ex_language"
+                                label="Язык"
+                                name="executable_language"
+                                onChange={handleChange}
+                            >
+                                <MenuItem key={1} value={1}>
+                                    Python
+                                </MenuItem>
+                                <MenuItem key={2} value={2}>
+                                    C++ MPI
+                                </MenuItem>
+                            </TextField>
+                            <FormHelperText>
+                                В дальнейшем ожидается поддержка и других языков.
+                            </FormHelperText>
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
@@ -61,7 +98,7 @@ function CreateTaskForm(props) {
                             />
                             <FormHelperText>
                                 Обратите внимание, что динамический ввод данных доступен только через аргументы
-                                командной строки
+                                командной строки.
                             </FormHelperText>
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -70,6 +107,7 @@ function CreateTaskForm(props) {
                                 required
                                 fullWidth
                                 defaultValue={1}
+                                disabled={numThreadsRequired}
                                 id="num_threads"
                                 label="Количество потоков"
                                 name="num_threads"
@@ -107,7 +145,7 @@ function CreateTaskForm(props) {
                         type="submit"
                         fullWidth
                         variant="contained"
-                        sx={{mt: 3, mb: 2}}
+                        sx={{ mt: 3, mb: 2 }}
                     >
                         Создать
                     </Button>
@@ -134,36 +172,36 @@ function TaskViewForm(props) {
                         Задача
                     </Typography>
                     <IconButton onClick={() => props.handleClose()}>
-                        <Close/>
+                        <Close />
                     </IconButton>
                 </Stack>
-                <Box component="form" noValidate sx={{mt: 3}}>
+                <Box component="form" noValidate sx={{ mt: 3 }}>
                     {
                         props.loading ?
                             <Grid container spacing={2}>
                                 <Grid item xs={12}>
-                                    <Skeleton variant="rounded" width={600} height={50}/>
+                                    <Skeleton variant="rounded" width={600} height={50} />
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <Skeleton variant="rounded" width={600} height={50}/>
+                                    <Skeleton variant="rounded" width={600} height={50} />
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <Skeleton variant="rounded" width={600} height={50}/>
+                                    <Skeleton variant="rounded" width={600} height={50} />
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <Skeleton variant="rounded" width={600} height={50}/>
+                                    <Skeleton variant="rounded" width={600} height={50} />
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <Skeleton variant="rounded" width={600} height={50}/>
+                                    <Skeleton variant="rounded" width={600} height={50} />
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <Skeleton variant="rounded" width={600} height={50}/>
+                                    <Skeleton variant="rounded" width={600} height={50} />
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <Skeleton variant="rounded" width={600} height={50}/>
+                                    <Skeleton variant="rounded" width={600} height={50} />
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <Skeleton variant="rounded" width={600} height={50}/>
+                                    <Skeleton variant="rounded" width={600} height={50} />
                                 </Grid>
                             </Grid>
                             :
@@ -259,7 +297,10 @@ function TasksContent() {
     const [file, setFile] = useState();
     const navigate = useNavigate();
     const handleCreateOpen = () => setCreateOpen(true);
-    const handleCreateClose = () => setCreateOpen(false);
+    const handleCreateClose = () => {
+        setCreateOpen(false);
+        setFile({});
+    };
     const handleInfoOpen = () => setInfoOpen(true);
     const handleInfoClose = () => setInfoOpen(false);
     const dataFetchedRef = useRef(false);
@@ -269,7 +310,7 @@ function TasksContent() {
     );
 
     const getTasks = async () => {
-        const token = localStorage.getItem('token')
+        const token = sessionStorage.getItem('token')
         if (token) {
             try {
                 const response = await Requests.getTasks();
@@ -279,12 +320,12 @@ function TasksContent() {
                 console.error(error);
             }
         } else {
-            navigate('/login', {replace: true})
+            navigate('/login', { replace: true })
         }
     };
 
     const deleteTask = async (task_id) => {
-        const response = await Requests.deleteTask({task_id: task_id});
+        const response = await Requests.deleteTask({ task_id: task_id });
         if (response.status === 400) {
             const result = await response.json();
             alert(result.detail);
@@ -293,15 +334,16 @@ function TasksContent() {
     };
 
     const executeTask = async (task_id) => {
-        const response = await Requests.executeTask({task_id: task_id});
+        const response = await Requests.executeTask({ task_id: task_id });
         const result = await response.json();
         alert(result.detail);
+        await getTasks();
     };
 
     const showTaskInfo = async (task_id) => {
         setInfoLoading(true);
         handleInfoOpen();
-        const response = await Requests.getTask({task_id: task_id})
+        const response = await Requests.getTask({ task_id: task_id })
         const result = await response.json();
         setTaskData(result);
         await delay(1000);
@@ -317,7 +359,7 @@ function TasksContent() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-
+        const num_threads = data.get('num_threads') === null ? 1 : data.get('num_threads');
         await Requests.createTask({
             file: {
                 "name": file.name,
@@ -325,8 +367,9 @@ function TasksContent() {
                 "body": file.body
             },
             params: data.get('params'),
-            num_threads: data.get('num_threads'),
+            num_threads: num_threads,
             priority: data.get('priority'),
+            type: data.get('executable_language')
         })
         setFile({});
         handleCreateClose();
@@ -335,7 +378,7 @@ function TasksContent() {
 
     return (
         <React.Fragment>
-            <Container disableGutters maxWidth="sm" component="main" sx={{pt: 8, pb: 4}}>
+            <Container disableGutters maxWidth="sm" component="main" sx={{ pt: 8, pb: 4 }}>
                 <Typography
                     component="h1"
                     variant="h2"
@@ -346,8 +389,8 @@ function TasksContent() {
                     Список задач
                 </Typography>
             </Container>
-            <Container disableGutters maxWidth="lg" component="main" sx={{pt: 4, pb: 4}}>
-                <Button onClick={handleCreateOpen} variant="contained" sx={{my: 4}}>
+            <Container disableGutters maxWidth="lg" component="main" sx={{ pt: 4, pb: 4 }}>
+                <Button onClick={handleCreateOpen} variant="contained" sx={{ my: 4 }}>
                     Создать
                 </Button>
                 <Modal
@@ -356,7 +399,7 @@ function TasksContent() {
                     aria-labelledby="create-task-modal"
                 >
                     <Box>
-                        <CreateTaskForm hanleSubmit={handleSubmit} file={file} setFile={setFile}/>
+                        <CreateTaskForm hanleSubmit={handleSubmit} file={file} setFile={setFile} />
                     </Box>
                 </Modal>
                 <Modal
@@ -365,36 +408,40 @@ function TasksContent() {
                     aria-labelledby="task-info-modal"
                 >
                     <Box>
-                        <TaskViewForm data={taskData} handleClose={handleInfoClose} loading={infoLoading}/>
+                        <TaskViewForm data={taskData} handleClose={handleInfoClose} loading={infoLoading} />
                     </Box>
                 </Modal>
                 <TableContainer component={Paper}>
                     <Table aria-label="simple table">
                         <TableHead>
                             <TableRow>
-                                <TableCell/>
+                                <TableCell>
+                                    <IconButton onClick={getTasks} size="small">
+                                        <RefreshIcon />
+                                    </IconButton>
+                                </TableCell>
                                 <TableCell align="left">Имя файла</TableCell>
                                 <TableCell align="center">Количество потоков</TableCell>
                                 <TableCell align="center">Приоритет</TableCell>
                                 <TableCell align="center">Создано</TableCell>
                                 <TableCell align="center">Статус</TableCell>
-                                <TableCell/>
+                                <TableCell />
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {tasksData.map((row) => (
                                 <TableRow
                                     key={row.id_task}
-                                    sx={{'&:last-child td, &:last-child th': {border: 0}}}
+                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                 >
                                     <TableCell>
                                         <Stack direction="row" spacing={1}>
                                             <IconButton onClick={() => deleteTask(row.id_task)} size="small">
-                                                <DeleteIcon/>
+                                                <DeleteIcon />
                                             </IconButton>
-                                            <Divider orientation="vertical" variant="middle" flexItem/>
+                                            <Divider orientation="vertical" variant="middle" flexItem />
                                             <IconButton onClick={() => showTaskInfo(row.id_task)} size="small">
-                                                <SearchIcon/>
+                                                <SearchIcon />
                                             </IconButton>
                                         </Stack>
                                     </TableCell>
@@ -407,7 +454,7 @@ function TasksContent() {
                                     <TableCell align="center">{row.status?.name}</TableCell>
                                     <TableCell>
                                         <IconButton onClick={() => executeTask(row.id_task)} size="small">
-                                            <PlayArrowIcon/>
+                                            <PlayArrowIcon />
                                         </IconButton>
                                     </TableCell>
                                 </TableRow>
@@ -423,7 +470,7 @@ function TasksContent() {
 export default function TasksPage() {
     return (
         <>
-            <TasksContent/>
+            <TasksContent />
         </>
     )
 };
