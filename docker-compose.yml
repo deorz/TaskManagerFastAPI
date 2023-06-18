@@ -14,9 +14,6 @@ services:
 
   backend:
     image: deorz/task_manager_backend
-    build:
-      context: backend
-      dockerfile: Dockerfile
     restart: always
     depends_on:
       db:
@@ -26,9 +23,6 @@ services:
 
   frontend:
     image: deorz/task_manager_front
-    build:
-      context: frontend
-      dockerfile: Dockerfile
     depends_on:
       - backend
     volumes:
