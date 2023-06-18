@@ -19,7 +19,6 @@ inflect==6.0.0
 mccabe==0.7.0
 paramiko==3.2.0
 passlib==1.7.4
-psycopg2==2.9.6
 pyasn1==0.4.8
 pycodestyle==2.10.0
 pycparser==2.21

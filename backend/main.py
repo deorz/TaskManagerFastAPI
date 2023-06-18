@@ -1,4 +1,3 @@
-import os
 from typing import Callable
 
 from fastapi import FastAPI, Response, Request
@@ -23,7 +22,6 @@ task_manager = FastAPI(
     title='TaskManagerFastAPI',
     description='Task Manager for Supercomputer',
     version='0.1',
-    debug=os.getenv('DEBUG', False)
 )
 
 task_manager.add_middleware(

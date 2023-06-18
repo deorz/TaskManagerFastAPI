@@ -1,6 +1,8 @@
-FROM python:3.8.9
+FROM python:3.10-bullseye
 
 LABEL author='deorz' version=1 project='task_manager'
+
+RUN apt update && apt install openssh-client
 
 WORKDIR backend/
 
@@ -12,4 +14,4 @@ RUN pip3 install -U pip && pip3 install -r requirements.txt
 
 ENV PYTHONPATH "${PYTHONPATH}:/"
 
-CMD ["gunicorn", "main:task_manager", "--workers", "1", "--worker-class", "uvicorn.workers.UvicornWorker", "--bind", "0:8000"]
+CMD ["uvicorn", "main:task_manager", "--host", "0.0.0.0", "--port", "8000"]
