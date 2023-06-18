@@ -80,4 +80,4 @@ jobs:
             cd task_manager/
             docker pull deorz/task_manager_backend:latest
             docker pull deorz/task_manager_frontend:latest
-            docker-compose up --force-recreate -d backend
+            docker-compose up --force-recreate -d backend frontend
