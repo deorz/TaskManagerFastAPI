@@ -10,9 +10,9 @@ from backend.task_manager.utils.ssh_client import RemoteClient
 
 def on_terminate(output: bytes, errors: bytes, exitcode: int, id_task: int) -> None:
     """Функция обработки результата выполнения таски"""
-    port: str = ':8000' if settings.DEBUG_ else ''
+    host: str = '127.0.0.1:8000' if settings.DEBUG_ else '45.130.8.194'
     requests.post(
-        url=f'http://127.0.0.1{port}/v1/tasks/{id_task}/result',
+        url=f'http://{host}/v1/tasks/{id_task}/result',
         json={
             'output': output.decode('UTF-8'),
             'errors': errors.decode('UTF-8'),
