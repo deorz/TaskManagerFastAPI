@@ -25,7 +25,7 @@ async def get_users(request: Request) -> List[UserOut]:
 
 
 @users_router.get('/me', dependencies=[Depends(JWTBearer())], response_model=UserOut)
-async def get_user(current_user: User = Depends(get_current_user)) -> UserOut:
+async def get_logged_user(current_user: User = Depends(get_current_user)) -> UserOut:
     """Функция получения одного пользователя"""
     return UserOut.from_orm(current_user)
 

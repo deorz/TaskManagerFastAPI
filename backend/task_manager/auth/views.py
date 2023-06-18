@@ -1,4 +1,4 @@
-from fastapi import Depends, Request, APIRouter
+from fastapi import Request, APIRouter
 from starlette import status
 from starlette.exceptions import HTTPException
 

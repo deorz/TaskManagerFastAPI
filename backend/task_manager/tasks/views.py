@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import selectinload
@@ -7,7 +7,7 @@ from starlette.exceptions import HTTPException
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
-from backend.task_manager.database.models import Task, Order, System, User, File
+from backend.task_manager.database.models import Task, Order, User, File
 from backend.task_manager.database.queries import get_entity, update_entity
 from backend.task_manager.database.service import try_flush_commit
 from backend.task_manager.status.enums import StatusEnum
@@ -112,7 +112,7 @@ async def update_task(request: Request, task: TaskBase, pk: int) -> TaskOut:
 
 @tasks_router.delete('/{pk}', dependencies=[Depends(JWTBearer())],
                      status_code=status.HTTP_204_NO_CONTENT)
-async def update_task(request: Request, pk: int) -> None:
+async def delete_task(request: Request, pk: int) -> None:
     """Функция для обновления записи о таске"""
     query = await get_entity(
         session=request.state.session,
@@ -122,12 +122,12 @@ async def update_task(request: Request, pk: int) -> None:
     )
     result = await request.state.session.execute(query)
     task: Task = result.scalars().first()
-    if task.id_status == StatusEnum.created.value:
+    if task.id_status in (StatusEnum.created.value, StatusEnum.exited.value):
         await request.state.session.delete(task)
         await try_flush_commit(session=request.state.session, commit=False)
         return None
     raise HTTPException(
-        detail='Задача не находится в статусе «Создана», удаление недоступно',
+        detail='Задача не находится в статусе «Создана», «Завершена», удаление недоступно',
         status_code=status.HTTP_400_BAD_REQUEST
     )
 
