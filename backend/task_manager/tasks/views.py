@@ -163,6 +163,7 @@ async def execute_task(request: Request, pk: int) -> JSONResponse:
 
     order.order_number = 1
     order.task.id_status = StatusEnum.scheduled.value
+    await try_flush_commit(session=request.state.session, commit=True)
     await reorder_queue(session=request.state.session)
     return JSONResponse(
         content={
