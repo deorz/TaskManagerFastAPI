@@ -22,7 +22,7 @@ services:
       - ./.env
 
   frontend:
-    image: deorz/task_manager_front
+    image: deorz/task_manager_frontend
     depends_on:
       - backend
     volumes:
