@@ -27,6 +27,8 @@ services:
       - backend
     volumes:
       - ../frontend/:/frontend/result_build/
+    env_file:
+      - ./.env
 
   nginx:
     image: nginx:1.19.3

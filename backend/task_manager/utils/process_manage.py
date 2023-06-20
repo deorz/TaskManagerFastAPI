@@ -1,6 +1,6 @@
 from pathlib import Path
 
-import requests
+from requests import post
 
 from backend.task_manager.database.models import File, System, Task
 from backend.task_manager.settings import settings
@@ -10,9 +10,8 @@ from backend.task_manager.utils.ssh_client import RemoteClient
 
 def on_terminate(output: bytes, errors: bytes, exitcode: int, id_task: int) -> None:
     """Функция обработки результата выполнения таски"""
-    host: str = '127.0.0.1:8000' if settings.DEBUG_ else '45.130.8.194'
-    requests.post(
-        url=f'http://{host}/v1/tasks/{id_task}/result',
+    post(
+        url=f'http://{settings.API_URL}/v1/tasks/{id_task}/result',
         json={
             'output': output.decode('UTF-8'),
             'errors': errors.decode('UTF-8'),
@@ -23,7 +22,7 @@ def on_terminate(output: bytes, errors: bytes, exitcode: int, id_task: int) -> N
 
 
 def run_process(task: Task, file: File, system: System, id_task: int) -> None:
-    """Функция запуска откреплённого процесса"""
+    """Функция запуска задачи"""
     import threading
 
     def threadfunc():
