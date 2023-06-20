@@ -287,5 +287,5 @@ class Requests {
 
 }
 
-Requests = new Requests(process.env.API_URL || 'http://localhost:8000', { 'content-type': 'application/json' });
+Requests = new Requests('http://45.130.8.194', { 'content-type': 'application/json' });
 export default Requests;
