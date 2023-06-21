@@ -36,6 +36,8 @@ async def run_tasks_loop():
                 select(System).filter(
                     System.active.is_(True),
                     System.available_threads > 0
+                ).order_by(
+                    System.available_threads.asc()
                 )
             )
 
