@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List
 
 from fastapi import APIRouter, Depends
@@ -74,7 +75,7 @@ async def create_task(
         params=task.params,
         num_threads=task.num_threads,
         priority=task.priority,
-        created_at=task.created_at,
+        created_at=datetime.now().replace(microsecond=0),
         id_file=file.id_file,
         id_status=StatusEnum.created.value
     )

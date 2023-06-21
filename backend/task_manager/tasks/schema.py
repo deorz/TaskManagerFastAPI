@@ -1,4 +1,3 @@
-from datetime import datetime
 from typing import Union, Optional
 
 from pydantic import BaseModel
@@ -60,7 +59,6 @@ class TaskIn(TaskBase):
     type: int
     num_threads: int
     priority: int
-    created_at: datetime = datetime.now().replace(microsecond=0)
 
 
 class TaskResult(BaseModel):
