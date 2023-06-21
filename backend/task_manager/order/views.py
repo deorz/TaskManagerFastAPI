@@ -13,9 +13,7 @@ order_router = APIRouter(prefix='/order')
 
 
 @order_router.get('/', dependencies=[Depends(JWTBearer())], response_model=List[OrderOut])
-async def get_orders(
-        request: Request, current_user: User = Depends(get_current_user)
-) -> List[OrderOut]:
+async def get_orders(request: Request) -> List[OrderOut]:
     """Функция получения очереди исполнения"""
     query = await get_entity(
         session=request.state.session,
@@ -32,7 +30,6 @@ async def get_orders(
             selectinload(Task.status)
         )
     ).filter(
-        Task.id_user == current_user.id_user,
         Order.order_number.isnot(None)
     )
     result = await request.state.session.execute(query)
