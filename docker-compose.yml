@@ -18,6 +18,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      volumes:
+      ../tasks/:/backend/task_manager/scripts/
     env_file:
       - ./.env
 
